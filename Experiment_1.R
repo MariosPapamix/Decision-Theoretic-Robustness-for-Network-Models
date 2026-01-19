@@ -41,14 +41,14 @@ robust_kl_risk_entropic <- function(losses, w, C, lambda_max = 100) {
 
 
 ############################################################
-## Experiment A: ER vs 2-block SBM (known labels) – FIXED
+## Experiment A: ER vs 2-block SBM (known labels)
 ############################################################
 
 ## Re-use your make_ER_SBM_setup(), simulate_ER_graph(),
 ## simulate_SBM_graph(), compute_loglik_ER(), compute_loglik_SBM()
 ## and single_rep_ER_SBM() as they are.
 
-## New driver with correct small-C normalisation for 0–1 loss
+## Small-C normalisation for 0–1 loss
 run_ER_SBM_experiment_A <- function(
     n, c, lambda,
     n_rep   = 1000,
@@ -118,7 +118,7 @@ abline(h = 1, lty = 2, col = "red")
 
 
 ############################################################
-## Experiment B: configuration model – FIXED DRIVER
+## Experiment B: configuration model 
 ############################################################
 
 ## Keep your rgamma_trunc() and single_rep_config_Poisson() as they are.
