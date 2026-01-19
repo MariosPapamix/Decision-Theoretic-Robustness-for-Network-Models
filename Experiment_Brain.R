@@ -481,7 +481,7 @@ plot(
 
 dev.off()
 
-## 8(b) C vs L coloured by ER/SBM preference (cf. Mantziou Fig. 25)
+## 8(b) C vs L coloured by ER/SBM preference
 
 cluster_label <- ifelse(brain_results$p_SBM >= 0.5, 2, 1)
 
