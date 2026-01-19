@@ -138,7 +138,7 @@ analyze_scan_model_selection_sbm <- function(
   bic <- c(fit1$BIC, fit2$BIC)
   names(bic) <- paste0("SBM_K", K_pair)
   
-  ## Tempered BIC pseudo-posterior
+  ## BIC pseudo-posterior
   bic_shift <- bic - min(bic)                   # stabilise
   w_unnorm  <- exp(-0.5 * tau_bic * bic_shift)
   w         <- w_unnorm / sum(w_unnorm)
@@ -309,7 +309,7 @@ subject_summary <- merge(subject_summary, C_star_subject, by = "subject")
 subject_summary <- subject_summary[order(subject_summary$subject), ]
 
 ## ======================================================
-## 8. Figures (like the Mantziou brain plots, but SBM vs SBM)
+## 8. Figures (SBM vs SBM)
 ## ======================================================
 
 ## 8(a) Small-radius normalised curve + S vs p_SBM2
@@ -384,7 +384,7 @@ dev.off()
 
 
 ## ==========================================================
-## Robust SBM(K1) vs SBM(K2) analysis with tempered evidence
+## Robust SBM(K1) vs SBM(K2) analysis
 ## ==========================================================
 ## Assumes you already have:
 ##   brain_results with columns:
@@ -394,9 +394,9 @@ dev.off()
 ## ==========================================================
 
 ## -----------------------------
-## 1. Temper model probabilities
+## 1. Model probabilities
 ## -----------------------------
-tau_new <- 0.01      # strong tempering: odds_new = odds^tau_new
+tau_new <- 0.01      # odds_new = odds^tau_new
 tau_old <- 1         # original probs assumed to use tau_old = 1
 p_floor <- 1e-3      # hard floor away from 0 and 1
 
@@ -411,7 +411,7 @@ sums    <- p1_orig + p2_orig
 p1_orig <- p1_orig / sums
 p2_orig <- p2_orig / sums
 
-## Retemper the odds: odds_new = odds^(tau_new / tau_old)
+## The odds: odds_new = odds^(tau_new / tau_old)
 odds12_old <- p1_orig / p2_orig
 odds12_new <- odds12_old^(tau_new / tau_old)
 
@@ -425,7 +425,7 @@ p2_temp <- 1 - p1_temp
 brain_results$p_SBM1_t <- p1_temp
 brain_results$p_SBM2_t <- p2_temp
 
-## Bayes action under tempered posterior
+## Bayes action under posterior
 brain_results$action0 <- ifelse(
   brain_results$p_SBM2_t >= 0.5,
   paste0("SBM_K", brain_results$K2),
@@ -570,20 +570,20 @@ plot(
 )
 abline(h = 1, lty = 2)
 
-## (right) S vs tempered P(SBM_K2 | data)
+## (right) S vs P(SBM_K2 | data)
 plot(
   brain_results$S,
   brain_results$p_SBM2_t,
   pch  = 19,
   xlab = "Small-world index S",
-  ylab = "Tempered posterior P(SBM K2 | data)",
+  ylab = "Posterior P(SBM K2 | data)",
   main = "Brain networks: S vs P(SBM K2 | data)"
 )
 
 dev.off()
 
 ## ----------------------------------------------------------
-## 6. C vs L, coloured by preferred SBM (tempered)
+## 6. C vs L, coloured by preferred SBM 
 ## ----------------------------------------------------------
 cluster_label <- ifelse(brain_results$p_SBM2_t >= 0.5, 2, 1)
 
@@ -741,7 +741,7 @@ analyze_scan_sbm_vs_rdpg <- function(
   fit_sbm  <- fit_sbm_spectral(A, K = K_sbm)
   fit_rdpg <- fit_rdpg_ase(A, d = d_rdpg)
   
-  ## Tempered BIC pseudo-posterior:
+  ## BIC pseudo-posterior:
   ##   Pi(M = m | G) ∝ exp{ - (tau_bic/2) * BIC_m(G) }
   bic <- c(SBM = fit_sbm$BIC, RDPG = fit_rdpg$BIC)
   bic_shift <- bic - min(bic)   # stabilise
